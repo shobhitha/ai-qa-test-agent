@@ -1,32 +1,33 @@
-Phase 1 - Project Setup
+# Phase 1 — Project Setup
 
-1. Objective
+> **Status:** ✅ Complete
+> **Phase:** 1 of 11
+> **Previous:** [Project Overview](./00-project-overview.md)
+> **Next:** [OpenAI API Connection](./02-openai-api-connection.md)
 
-Set up the foundation for the AI QA Test Agent project.
+---
 
-The goals of this phase are to:
+## 📌 Objective
 
-Create a public GitHub repository
-Set up a Python project
-Create an isolated Python virtual environment
-Establish a clean project structure
-Install the initial dependencies
-Configure environment variables
-Protect sensitive information such as API keys
-Establish Git and GitHub practices for the project
+Establish the development foundation for the **AI QA Test Agent**.
 
-2. Project Repository
+In this phase, we:
 
-Repository name: ai-qa-test-agent
+* Created the GitHub repository
+* Set up the Python project
+* Created an isolated virtual environment
+* Established the project structure
+* Installed initial dependencies
+* Configured environment variables
+* Protected sensitive credentials
+* Set up Git version control
+* Established the documentation structure for future phases
 
-Project description: An AI-powered QA agent that analyzes software requirements, generates test cases, identifies edge cases, and eventually creates Playwright automation tests. 
-The repository is public because this project is intended to demonstrate practical AI + QA automation skills as part of a technical portfolio.
+---
 
+## 🏗️ Initial Project Structure
 
-3. Initial Project Structure
-
-The initial project structure is:
-
+```text
 ai-qa-test-agent/
 │
 ├── app/
@@ -42,374 +43,430 @@ ai-qa-test-agent/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
+```
 
-The project will grow as additional functionality is implemented.
+The project structure will evolve as new capabilities are added.
 
-4. Python Virtual Environment
+---
 
-A Python virtual environment is used to isolate this project's dependencies from other Python projects and from the system Python installation.
+# 1. Python Environment
 
-Create the virtual environment:
+## Create Virtual Environment
 
+```bash
 python3 -m venv .venv
+```
 
-Activate it:
+## Activate Virtual Environment
 
+```bash
 source .venv/bin/activate
+```
 
-When the environment is active, the terminal displays:
+A successful activation displays `(.venv)` in the terminal prompt.
 
-(.venv)
+### Why?
 
-before the command prompt.
+A virtual environment isolates project dependencies from:
 
-Why use a virtual environment?
+* The system Python installation
+* Other Python projects
+* Different versions of the same package
 
-Different Python projects may require different versions of packages.
+This helps prevent dependency conflicts and makes the project easier to reproduce.
 
-For example:
+---
 
-Project A → package version 1.5
-Project B → package version 2.0
+# 2. Project Dependencies
 
-A virtual environment prevents these dependencies from interfering with each other.
+The initial dependencies are:
 
-5. Initial Dependencies
-
-The initial Python packages are:
-
-openai
-python-dotenv
-pydantic
+| Package         | Purpose                                 |
+| --------------- | --------------------------------------- |
+| `openai`        | Communicate with the OpenAI API         |
+| `python-dotenv` | Load environment variables from `.env`  |
+| `pydantic`      | Validate and structure application data |
 
 Install them with:
 
+```bash
 pip install openai python-dotenv pydantic
+```
 
-Save the installed dependencies:
+Save the dependencies:
 
+```bash
 pip freeze > requirements.txt
-Purpose of each dependency
-OpenAI
+```
 
-Provides the Python SDK used to communicate with the OpenAI API.
+### Why `requirements.txt`?
 
-python-dotenv
+It allows another developer to recreate the project's Python environment without manually determining which packages are required.
 
-Loads environment variables from a local .env file.
+---
 
-This allows sensitive configuration such as API keys to remain outside the source code.
+# 3. Environment Variables
 
-Pydantic
+The application will require an OpenAI API key.
 
-Provides data validation and structured data models.
+The API key should **never be hardcoded in source code**.
 
-It will become more important as the agent starts producing structured QA results.
+Instead, use a local `.env` file:
 
-6. Environment Variables
+```text
+OPENAI_API_KEY=your_api_key_here
+```
 
-The application will eventually require an OpenAI API key.
+### `.env`
 
-The API key should NOT be written directly into Python source code.
+Contains the actual local secret.
 
-Instead, a local .env file is used.
+```text
+.env
+```
+
+This file must remain local and must **not** be committed to GitHub.
+
+### `.env.example`
+
+The repository contains:
+
+```text
+OPENAI_API_KEY=
+```
+
+This provides a safe template showing developers which environment variables are required.
+
+---
+
+# 4. Git Security
+
+The `.gitignore` file contains:
+
+```gitignore
+.env
+.venv/
+__pycache__/
+*.pyc
+```
+
+### Why these files are ignored
+
+| File / Directory | Reason                                 |
+| ---------------- | -------------------------------------- |
+| `.env`           | May contain API keys and other secrets |
+| `.venv/`         | Local Python virtual environment       |
+| `__pycache__/`   | Python-generated cache files           |
+| `*.pyc`          | Python compiled files                  |
+
+> ⚠️ **Security Rule:** Never commit an API key, password, token, or other secret to GitHub.
+
+---
+
+# 5. Verify Git Status
+
+Before committing:
+
+```bash
+git status
+```
+
+The actual `.env` file should **not** appear in the files to be committed.
+
+Expected files include:
+
+```text
+.env.example
+.gitignore
+README.md
+requirements.txt
+app/
+tests/
+docs/
+```
+
+If `.env` appears, stop and fix `.gitignore` before committing.
+
+---
+
+# 6. Git Workflow
+
+The project follows this basic workflow:
+
+```text
+        Make Changes
+             │
+             ▼
+        git status
+             │
+             ▼
+         git diff
+             │
+             ▼
+          git add
+             │
+             ▼
+        git commit
+             │
+             ▼
+         git push
+             │
+             ▼
+          GitHub
+```
+
+### Check changes
+
+```bash
+git status
+git diff
+```
+
+### Stage changes
+
+```bash
+git add .
+```
+
+### Commit
+
+```bash
+git commit -m "Set up AI QA agent project"
+```
+
+### Push
+
+```bash
+git push origin main
+```
+
+---
+
+# 7. What Gets Committed?
+
+### ✅ Commit
+
+```text
+README.md
+docs/
+app/
+tests/
+.gitignore
+.env.example
+requirements.txt
+```
+
+### ❌ Do NOT commit
+
+```text
+.env
+.venv/
+__pycache__/
+*.pyc
+```
+
+---
+
+# 8. Documentation Strategy
+
+Each major development phase has its own documentation.
+
+```text
+docs/
+│
+├── 00-project-overview.md
+├── 01-project-setup.md
+├── 02-openai-api-connection.md
+├── 03-basic-llm-test-generator.md
+├── 04-agent-architecture.md
+├── 05-agent-tools.md
+├── 06-test-reviewer.md
+├── 07-playwright-generator.md
+├── 08-web-ui.md
+├── 09-testing-and-evaluation.md
+├── 10-github-actions.md
+└── 11-deployment.md
+```
+
+This provides a chronological record of how the application evolved.
+
+Each phase will document:
+
+1. **Objective**
+2. **Implementation**
+3. **Technical concepts**
+4. **Design decisions**
+5. **Validation**
+6. **Git commit**
+7. **Interview preparation**
+8. **Next phase**
+
+---
+
+# 9. Key Concepts Learned
+
+### Virtual Environment
+
+An isolated Python environment used to manage project-specific dependencies.
+
+```bash
+python3 -m venv .venv
+```
+
+---
+
+### Python Packages
+
+Reusable libraries that provide functionality without requiring us to implement everything from scratch.
+
+---
+
+### Environment Variables
+
+Configuration values stored outside the application's source code.
 
 Example:
 
-OPENAI_API_KEY=your_api_key_here
-
-The actual .env file is intentionally excluded from Git.
-
-A .env.example file is included in the repository:
-
-OPENAI_API_KEY= The purpose of .env.example is to show developers which environment variables are required without exposing sensitive values.
-
-7. Git Security
-
-The .gitignore file contains:
-
-.env
-.venv/
-__pycache__/
-*.pyc
-Why?
-.env
-
-May contain API keys and other secrets. It must never be committed to a public GitHub repository.
-
-.venv/
-
-Contains the local Python virtual environment. It can be recreated from requirements.txt, so it does not need to be stored in Git.
-
-__pycache__/
-
-Contains Python-generated cache files.These are generated automatically and do not belong in source control.
-
-*.pyc
-Python compiled cache files.
-
-8. Git Verification
-
-Before committing, check the repository status:
-
-git status
-
-The actual .env file should NOT appear as an untracked file if .gitignore is configured correctly.
-
-It is safe for the following files to appear:
-
-.env.example
-.gitignore
-README.md
-requirements.txt
-app/
-tests/
-docs/
-
-The real API key must never appear in the Git repository.
-
-9. Documentation Strategy
-
-This project is being built incrementally.
-
-Each major phase will have its own documentation file.
-
-The documentation sequence is:
-
-00-project-overview.md
-        ↓
-01-project-setup.md
-        ↓
-02-openai-api-connection.md
-        ↓
-03-basic-llm-test-generator.md
-        ↓
-04-agent-architecture.md
-        ↓
-05-agent-tools.md
-        ↓
-06-test-reviewer.md
-        ↓
-07-playwright-generator.md
-        ↓
-08-web-ui.md
-        ↓
-09-testing-and-evaluation.md
-        ↓
-10-github-actions.md
-        ↓
-11-deployment.md
-
-This allows the project to serve both as a portfolio and as a personal learning record.
-
-10. What I Learned in Phase 1
-Python Virtual Environments
-
-A virtual environment provides an isolated environment for Python dependencies.
-
-Command:
-
-python3 -m venv .venv
-Python Packages
-
-Python packages provide reusable functionality.
-
-Packages can be installed using:
-
-pip install <package>
-
-The project's dependencies are recorded in:
-
-requirements.txt
-Environment Variables
-
-Environment variables allow configuration and sensitive information to be kept outside the source code.
-
-For example:
-
+```text
 OPENAI_API_KEY
-.env vs .env.example
+```
 
-.env:
+---
 
-Contains actual local values
-Should remain private
-Should not be committed to GitHub
+### `.env`
 
-.env.example:
+Local configuration file containing actual environment values.
 
-Contains placeholder values
-Can safely be committed
-Documents required configuration
-.gitignore
+**Not committed to GitHub.**
 
-.gitignore tells Git which files should not be tracked.
+---
 
-This is particularly important when working with API keys and other secrets.
+### `.env.example`
 
-Git vs GitHub
+Safe template that documents required environment variables.
 
-Git is the version-control system used to track changes locally.
+**Committed to GitHub.**
 
-GitHub is the remote platform where the Git repository is hosted.
+---
 
-The basic workflow is:
+### `.gitignore`
 
-Make changes
-     ↓
-git status
-     ↓
-git add
-     ↓
-git commit
-     ↓
-git push
-     ↓
-GitHub
-11. Validation Checklist
+Specifies files and directories Git should not track.
 
-Before considering Phase 1 complete, verify:
+---
 
-GitHub repository created
+### Git
 
-Repository is public
+A version-control system used to track changes to the project.
 
-Project cloned locally
+### GitHub
 
-Python virtual environment created
+A remote platform used to host and collaborate on Git repositories.
 
-Virtual environment activated
+---
 
-app/ directory created
+# 10. Validation Checklist
 
-tests/ directory created
+Before marking Phase 1 complete:
 
-docs/ directory created
+* [x] GitHub repository created
+* [x] Repository configured as public
+* [x] Project cloned locally
+* [x] Python virtual environment created
+* [x] Virtual environment activated
+* [x] `app/` directory created
+* [x] `tests/` directory created
+* [x] `docs/` directory created
+* [x] `.gitignore` created
+* [x] `.env.example` created
+* [x] Local `.env` created
+* [x] `openai` installed
+* [x] `python-dotenv` installed
+* [x] `pydantic` installed
+* [x] `requirements.txt` generated
+* [x] API key excluded from source code
+* [x] `.env` excluded from Git
+* [x] Phase 1 documentation created
 
-.gitignore created
+---
 
-.env.example created
+12. Portfolio Perspective
 
-Actual .env created locally
+Phase 1 establishes the engineering foundation rather than demonstrating the final AI capabilities.
 
-openai installed
+The project will progressively demonstrate:
 
-python-dotenv installed
-
-pydantic installed
-
-requirements.txt generated
-
-API key is NOT present in source code
-
-.env is NOT being tracked by Git
-
-Phase 1 documentation added
-
-12. Git Commit
-
-Once the validation checklist is complete, commit the Phase 1 work.
-
-Check the changes:
-
-git status
-
-Review what will be committed:
-
-git diff
-
-Stage the files:
-
-git add .
-
-Check again:
-
-git status
-
-Commit:
-
-git commit -m "Set up AI QA agent project"
-
-Push to GitHub:
-
-git push origin main
-13. What Should Be Committed?
-
-The following should be committed:
-
-README.md
-docs/
-app/
-tests/
-.gitignore
-.env.example
-requirements.txt
-
-The following should NOT be committed:
-
-.env
-.venv/
-__pycache__/
-*.pyc
-
-Most importantly:
-
-Never commit an actual API key.
-
-
-14. Portfolio Value of Phase 1
-
-Phase 1 by itself is not the main demonstration of AI expertise.
-
-Its purpose is to establish professional engineering practices that will support the later AI functionality.
-
-The more important portfolio progression will be:
-
-Python Project
-      ↓
+Python
+  │
+  ▼
 OpenAI API
-      ↓
+  │
+  ▼
 LLM Application
-      ↓
+  │
+  ▼
 AI Agent
-      ↓
+  │
+  ▼
 Agent Tools
-      ↓
-Evaluation
-      ↓
-Playwright
-      ↓
+  │
+  ▼
+AI Evaluation
+  │
+  ▼
+Playwright Automation
+  │
+  ▼
+Web Interface
+  │
+  ▼
 CI/CD
-      ↓
+  │
+  ▼
 Deployment
 
-The project should demonstrate not only that I can use an AI model, but that I can build, test, document, version, and deploy an AI-powered software system.
+The goal is to demonstrate the ability to design, build, test, document, version, and deploy an AI-powered QA application.
 
-15. Phase 1 Completion
-Status
-
-Complete when all validation items have been checked and the Git commit has been pushed successfully.
-
-Commit
+13. Phase 1 Git Commit
+Commit Message
 Set up AI QA agent project
-Next Phase
+Commit Command
+git add .
+git commit -m "Set up AI QA agent project"
+git push origin main
 
+14. Completion
+
+Phase 1 is complete when:
+
+The project structure exists
+Dependencies are installed
+Environment variables are configured
+Secrets are protected
+Documentation is committed
+The repository is pushed to GitHub
+➡️ Next Phase
 Phase 2 — OpenAI API Connection
 
-The next phase will establish communication between the Python application and the OpenAI API.
+In the next phase, the Python application will communicate with the OpenAI API.
 
-The expected flow will be:
+The initial architecture will be:
 
 Python Application
-        ↓
+        │
+        ▼
 OpenAI Python SDK
-        ↓
+        │
+        ▼
 OpenAI API
-        ↓
+        │
+        ▼
 GPT Model
-        ↓
+        │
+        ▼
 Response
-        ↓
+        │
+        ▼
 Python Application
 
-The goal of Phase 2 is to understand and verify this connection before building the actual QA test-generation functionality.
+The goal is to establish and understand this connection before building the AI-powered QA functionality.
