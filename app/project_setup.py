@@ -1,3 +1,8 @@
+"""AI QA Test Generator
+
+Takes a software requirement as input and uses an LLM
+to generate structured QA test scenarios."""
+
 import os
 
 from dotenv import load_dotenv
